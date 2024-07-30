@@ -1,0 +1,136 @@
+<!-- courses/templates/courses/course_detail.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-bottom: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        p {
+            line-height: 1.6;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .form-group button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #45a049;
+        }
+        .comments {
+            margin-top: 20px;
+        }
+        .comment {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .comment:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>{{ course.title }}</h1>
+</header>
+
+<div class="container">
+    <h2>Description</h2>
+    <p>{{ course.description }}</p>
+    <h2>Course Details</h2>
+    <p>Number of Students: {{ course.number_of_students }}</p>
+    <p>Price: {{ course.price }}</p>
+    <p>Duration: {{ course.duration }} hours</p>
+    <p>Category: {{ course.category.name }}</p>
+
+    <h2>Course Video</h2>
+    <video controls>
+        <source src="{{ course.video.url }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <h2>Comments</h2>
+    <div class="comments">
+        {% for comment in comments %}
+            <div class="comment">
+                <h3>{{ comment.name }} (Rating: {{ comment.rating }})</h3>
+                <p>{{ comment.comment }}</p>
+                <p>Email: {{ comment.email }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h2>Add a Comment</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_name">Name:</label>
+            {{ comment_form.name }}
+        </div>
+        <div class="form-group">
+            <label for="id_email">Email:</label>
+            {{ comment_form.email }}
+        </div>
+        <div class="form-group">
+            <label for="id_comment">Comment:</label>
+            {{ comment_form.comment }}
+        </div>
+        <div class="form-group">
+            <label for="id_rating">Rating:</label>
+            {{ comment_form.rating }}
+        </div>
+        <div class="form-group">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

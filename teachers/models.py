@@ -1,17 +1,21 @@
 from django.db import models
 
-from courses.models import Course
+from courses.models import Course, Category
 
 
 # Create your models here.
 
 class Teachers(models.Model):
+    class LevelChoices(models.TextChoices):
+        JUNIOR = 'Junior'
+        MIDDLE = 'Middle'
+        SENIOR = 'Senior'
     full_name = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
-    phone = models.CharField(max_length=13)
-    email = models.EmailField()
     courses = models.ForeignKey(Course, related_name='course', on_delete=models.CASCADE, null=True, blank=True)
+    image = models.ImageField(upload_to='teachers', null=True, blank=True)
     specialty = models.TextField(blank=True)
+    category = models.ForeignKey(Category, related_name='category', on_delete=models.CASCADE, null=True, blank=True)
+    level = models.CharField(choices=LevelChoices.choices, default=LevelChoices.SENIOR, max_length=100)
 
 
 class Comment(models.Model):

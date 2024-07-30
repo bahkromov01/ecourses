@@ -8,6 +8,7 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="category")
 
     def __str__(self):
         return self.name
@@ -20,15 +21,27 @@ class Course(models.Model):
     price = models.FloatField()
     duration = models.IntegerField()
     # teachers = models.ManyToManyField()
+    image = models.ImageField(upload_to="course")
     video = models.FileField(upload_to='media/courses')
     category = models.ForeignKey(Category, related_name='courses', on_delete=models.CASCADE, null=True, blank=True)
 
-    # @property
-    # def duration_of_video(self):
-    #     pass
+    @property
+    def hours(self):
+        if self.duration >= 60:
+            hours = self.duration // 60
+            return hours
+
+    @property
+    def minutes(self):
+        if self.duration >= 60:
+            minutes = self.duration % 60
+            return minutes
+
+    objects = models.Manager
 
     def __str__(self):
         return self.title
+
 
 
 class Comment(models.Model):

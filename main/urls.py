@@ -1,10 +1,10 @@
 from django.urls import path
 
-from blog.views import blog
-from main.views import index, about, contact
+from main.views import index, about, contact, login
 
 urlpatterns = [
     path('index/', index, name='index'),
     path('about/', about, name='about'),
     path('contact/',contact, name='contact'),
+    path('login/', login, name='login'),
 ]
