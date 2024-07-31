@@ -2,7 +2,7 @@ import json
 import os
 
 from django.core.mail import send_mail
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from confic import settings
@@ -15,10 +15,10 @@ from courses.models import Course
 @receiver(post_save, sender=Course)
 def courses_save(sender, instance, created,  **kwargs):
     if created:
-        subject = f'HI{instance.name}'
+        subject = f'HI{instance.title}'
         message = 'Your teachers has been created. Thank you!'
-        from_email = (settings.EMAIL_HOST_USER)
-        to_email =[instance.email]
+        from_email = settings.EMAIL_HOST_USER
+        to_email = [instance.email]
         try:
             send_mail(subject, message, from_email, to_email)
             print(f'Mail sent to {instance.email}')
@@ -26,6 +26,7 @@ def courses_save(sender, instance, created,  **kwargs):
             raise f'Error sending email: {e}'
 
 
+@receiver(post_delete, sender=Course)
 def courses_delete(sender, instance, **kwargs):
     file = os.path.join(BASE_DIR, 'courses/delete', f'courses_{instance.id}.json')
 

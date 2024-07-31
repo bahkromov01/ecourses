@@ -1,12 +1,10 @@
 from django.urls import path
 
-from main.views import index
 from . import views
-from .views import teacher_list, teacher_detail
+from .views import TeacherList, teacher_detail
 
 urlpatterns = [
-    path('index/', index, name='index'),
-    path('teachers/', teacher_list, name='teachers'),
+    path('teachers/',TeacherList.as_view(), name='teachers'),
     path('teacher_detail/<int:pk>/', teacher_detail, name='teacher_detail'),
     # Add other URL patterns here
 ]

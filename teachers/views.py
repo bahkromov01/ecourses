@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -9,17 +10,27 @@ from django.views import View
 #     return render(request, 'teacher/teacher.html')
 # views.py
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Teachers, Comment
+from .models import Teachers
 from .forms import CommentForm
 
 
-def index(request):
-    return render(request, 'app/index.html')
 
+class TeacherList(View):
+    def get(self, request):
+        page = request.GET.get('page', '')
+        teachers = Teachers.objects.all()
+        paginator = Paginator(teachers, 1)
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            page_obj = paginator.page(Paginator.num_pages)
 
-def teacher_list(request):
-    teachers = Teachers.objects.all()
-    return render(request, 'teacher/teacher.html', {'teachers': teachers})
+        context = {
+            'page_obj': page_obj,
+        }
+        return render(request, 'teacher/teacher.html', context)
 
 
 def teacher_detail(request, pk):

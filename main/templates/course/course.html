@@ -31,7 +31,7 @@
                         <div class="col-lg-3 col-md-6 mb-4">
                             <div class="cat-item position-relative overflow-hidden rounded mb-2">
                                 <img class="img-fluid" src="{{ category.image.url }}" alt="">
-                                <a class="cat-overlay text-white text-decoration-none" href="{% url 'course_detail' %}">
+                                <a class="cat-overlay text-white text-decoration-none" href="">
                                     <h4 class="text-white font-weight-medium"></h4>
                                     <span>{{ category.name }}</span>
                                 </a>
@@ -59,14 +59,14 @@
 
     
     <!-- Courses Start -->
-    {% if courses %}
+    {% if page_obj %}
         <div class="container-fluid py-5">
             <div class="container py-5">
                 <div class="text-center mb-5">
                     <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Courses</h5>
                     <h1>Our Popular Courses</h1>
                 </div>
-                {% for course in courses %}
+                {% for course in page_obj %}
                     <div class="row">
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="rounded overflow-hidden mb-2">
@@ -93,6 +93,21 @@
                         </div>
                     </div>
                 {% endfor %}
+                <div class="pagination">
+                  <span class="step-links">
+                      {% if page_obj.has_previous %}
+                          <a href="?page=1">&laquo; first</a>
+                          <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                      {% endif %}
+                      <span class="current">
+                          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                      </span>
+                      {% if page_obj.has_next %}
+                          <a href="?page={{ page_obj.next_page_number }}">next</a>
+                          <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                      {% endif %}
+                  </span>
+              </div>
             </div>
         </div>
     {% else %}
