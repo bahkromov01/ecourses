@@ -3,9 +3,6 @@ from django.db import models
 # Create your models here.
 
 
-from django.db import models
-
-
 class Category(models.Model):
     name = models.CharField(max_length=50)
     image = models.ImageField(upload_to="category")
@@ -21,8 +18,8 @@ class Course(models.Model):
     price = models.FloatField()
     duration = models.IntegerField()
     # teachers = models.ManyToManyField()
-    image = models.ImageField(upload_to="course")
-    video = models.FileField(upload_to='media/courses')
+    image = models.ImageField(upload_to="course", null=True, blank=True)
+    video = models.FileField(upload_to='media/courses', blank=True, null=True)
     category = models.ForeignKey(Category, related_name='courses', on_delete=models.CASCADE, null=True, blank=True)
 
     @property
@@ -41,7 +38,6 @@ class Course(models.Model):
 
     def __str__(self):
         return self.title
-
 
 
 class Comment(models.Model):

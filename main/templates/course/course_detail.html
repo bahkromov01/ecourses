@@ -1,138 +1,56 @@
-<!-- courses/templates/courses/course_detail.html -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ course.title }}</title>
+{% extends 'base.html' %}
+{% load static  %}
+{% block course_content %}
     
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        header {
-            background-color: #4CAF50;
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
-            margin-bottom: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1, h2, h3 {
-            color: #333;
-        }
-        p {
-            line-height: 1.6;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .form-group textarea {
-            resize: vertical;
-        }
-        .form-group button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .form-group button:hover {
-            background-color: #45a049;
-        }
-        .comments {
-            margin-top: 20px;
-        }
-        .comment {
-            border-bottom: 1px solid #ddd;
-            padding: 10px 0;
-        }
-        .comment:last-child {
-            border-bottom: none;
-        }
-    </style>
-</head>
-<body>
-<form></form>
-
-<header>
-    <h1>{{ course.title }}</h1>
-</header>
-
-<div class="container">
-    <h2>Description</h2>
-    <p>{{ course.description }}</p>
-    <h2>Course Details</h2>
-    <p>Number of Students: {{ course.number_of_students }}</p>
-    <p>Price: {{ course.price }}</p>
-    <p>Duration: {{ course.duration }} hours</p>
-    <p>Category: {{ course.category.name }}</p>
-
-    <h2>Course Video</h2>
-    <video controls>
-        <source src="{{ course.video.url }}" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
-    <h2>Comments</h2>
-    <div class="comments">
-        {% for comment in comments %}
-            <div class="comment">
-                <h3>{{ comment.name }} (Rating: {{ comment.rating }})</h3>
-                <p>{{ comment.comment }}</p>
-                <p>Email: {{ comment.email }}</p>
+    <!-- Header Start -->
+    <div class="container-fluid page-header" style="margin-bottom: 90px;">
+        <div class="container">
+            <div class="d-flex flex-column justify-content-center" style="min-height: 300px">
+                <h3 class="display-4 text-white text-uppercase">Courses</h3>
+                <div class="d-inline-flex text-white">
+                    <p class="m-0 text-uppercase"><a class="text-white" href="">Home</a></p>
+                    <i class="fa fa-angle-double-right pt-1 px-3"></i>
+                    <p class="m-0 text-uppercase">Courses</p>
+                </div>
             </div>
-        {% endfor %}
+        </div>
     </div>
-
-    <h2>Add a Comment</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="id_name">Name:</label>
-            {{ comment_form.name }}
-        </div>
-        <div class="form-group">
-            <label for="id_email">Email:</label>
-            {{ comment_form.email }}
-        </div>
-        <div class="form-group">
-            <label for="id_comment">Comment:</label>
-            {{ comment_form.comment }}
-        </div>
-        <div class="form-group">
-            <label for="id_rating">Rating:</label>
-            {{ comment_form.rating }}
-        </div>
-        <div class="form-group">
-            <button type="submit">Submit</button>
-        </div>
-    </form>
-</div>
-
-</body>
-</html>
+    <!-- Header End -->
+    
+    <!-- Courses Start -->
+    {% if courses %}
+        <div class="container-fluid py-5">
+            <div class="container py-5">
+                <div class="text-center mb-5">
+                    <h5 class="text-primary text-uppercase mb-3" style="letter-spacing: 5px;">Courses</h5>
+                    <h1>Our Popular Courses</h1>
+                </div>
+                {% for course in courses %}
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="rounded overflow-hidden mb-2">
+                                <img class="img-fluid" src="{{ course.image.url }}" alt="">
+                                <div class="bg-secondary p-4">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <small class="m-0"><i
+                                                class="fa fa-users text-primary mr-2"></i>{{ course.number_of_students }}
+                                            Students</small>
+                                        <small class="m-0"><i
+                                                class="far fa-clock text-primary mr-2"></i>{{ course.hours }}h {{ course.minutes }}m</small>
+                                    </div>
+                                    <a class="h5" href="{% url 'course_detail' course.slug %}">{{ course.title }}</a>
+                                    <div class="border-top mt-4 pt-4">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5
+                                                <small>(250)</small>
+                                            </h6>
+                                            <h5 class="m-0">${{ course.price }}</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+    {% endif %}
+{% endblock %}

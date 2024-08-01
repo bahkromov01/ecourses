@@ -39,7 +39,7 @@ class LoginPageView(View):
                 login(request, user)
                 return redirect('index')
 
-        return render(request, '', {'form': form})
+        return render(request, 'app/index.html', {'form': form})
 
 
 class LogoutPage(View):
@@ -82,19 +82,15 @@ def verify_email_confirm(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
-        print('-------------------------------')
-        print(user)
     except(TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
+        user.email_is_verified = True
         user.save()
-        login(request, user,backend='django.contrib.auth.backends.ModelBackend')
         messages.success(request, 'Your email has been verified.')
-        return redirect('index')
+        return redirect('verify_email_complete')
     else:
         messages.warning(request, 'The link is invalid.')
-
     return render(request, 'email/verify_email_confirm.html')
 
 
@@ -108,13 +104,20 @@ def email_send(request):
         form = EmailForm(request.POST)
         if form.is_valid():
             subject = form.cleaned_data['subject']
-            body = form.cleaned_data['body']
+            message = form.cleaned_data['message']
             from_email = settings.DEFAULT_FROM_EMAIL
             recipients = form.cleaned_data['recipients']
-            send_mail(subject, body, from_email, recipients, fail_silently=False)
+            send_mail(subject, message, from_email, recipients, fail_silently=False)
             sent = True
-
     else:
         form = EmailForm()
 
     return render(request, 'email/email_send.html', {'form': form, 'sent': sent})
+
+
+def verify_email_complete(request):
+    return render(request, 'email/verify_email_complete.html')
+
+
+def verify_email(request):
+    return render(request, 'email/verify_email.html')

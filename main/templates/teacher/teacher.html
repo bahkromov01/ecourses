@@ -32,17 +32,9 @@
                     <div class="team-item rounded overflow-hidden mb-2">
                         <div class="team-img position-relative">
                             <img class="img-fluid" src="{{ teacher.image.url }}" alt="">
-                            <div class="team-social">
-                                <a class="btn btn-outline-light btn-square mx-1" href="#"><i
-                                        class="fab fa-twitter"></i></a>
-                                <a class="btn btn-outline-light btn-square mx-1" href="#"><i
-                                        class="fab fa-facebook-f"></i></a>
-                                <a class="btn btn-outline-light btn-square mx-1" href="#"><i
-                                        class="fab fa-linkedin-in"></i></a>
-                            </div>
                         </div>
                         <div class="bg-secondary p-4">
-                            <h5>{{ teacher.full_name }}</h5>
+                            <h5><a href="{% url 'teacher_detail' teacher.id %}">{{ teacher.full_name }}</a></h5>
                             <p class="m-0">{{ teacher.specialty }}</p>
                         </div>
                     </div>

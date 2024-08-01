@@ -1,9 +1,12 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
+
+from blog.models import Blog_list
 from teachers.models import Teachers
 from .forms import CourseForm, CommentForm
-from .models import Course, Category
+from .models import Course, Category, Comment
+
 
 class IndexPage(View):
     def get(self, request):
@@ -54,21 +57,18 @@ class CourseList(View):
         return render(request, 'course/course.html', context)
 
 
-def courses_detail(request, pk):
-    course = get_object_or_404(Course, pk=pk)
-    if request.method == 'POST':
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.course = course
-            comment.save()
-            return redirect('course_detail', pk=course.pk)
-    else:
-        comment_form = CommentForm()
-    comments = course.comments.all()
-    return render(request, 'course/course_detail.html', {
-        'course': course,
-        'comment_form': comment_form,
-        'comments': comments
-    })
+class CourseDetail(View):
+    def get(self, request, slug):
+        courses = Course.objects.get(slug=slug)
+        comments = Comment.objects.filter(course_id__slug=slug)
+        categories = Category.objects.all()
+        blogs = Blog_list.objects.all()
+
+        context = {'courses': courses,
+                   'comments': comments,
+                   'categories': categories,
+                   'blogs': blogs, }
+
+        return render(request, 'course/course_detail.html', context)
+
 

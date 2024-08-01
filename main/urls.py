@@ -8,7 +8,7 @@ urlpatterns = [
     path('about/', about, name='about'),
     path('contact/',contact, name='contact'),
 
-    path('info/', Info.as_view() , name='info'),
+    path('info/', Info.as_view(), name='info'),
     path('login/', LoginPageView.as_view(), name='login'),
     path('logout/', LogoutPage.as_view(), name='logout'),
     path('register/', RegisterFormView.as_view(), name='register'),
@@ -16,6 +16,6 @@ urlpatterns = [
 
     # sending massage
 
-    path('verify-email-done/', verify_email_done, name='verify_email_done'),
-    path('verify-email-confirm/<uidb64>/<token>/', verify_email_confirm, name='verify_email_confirm')
+    path('verify_email_done/', verify_email_done, name='verify_email_done'),
+    path('verify_email_confirm/<uidb64>/<token>/', verify_email_confirm, name='verify_email_confirm')
 ]

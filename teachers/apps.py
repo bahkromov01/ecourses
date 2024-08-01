@@ -6,5 +6,6 @@ class TeachersConfig(AppConfig):
     name = 'teachers'
 
 
+
     def ready(self):
         import teachers.signals

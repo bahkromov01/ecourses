@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
+from blog.models import Blog_list
 from confic import settings
 from courses.models import Category
 from main.forms import ContactForm, EmailForm
@@ -18,11 +19,14 @@ class IndexPage(View):
         categories = Category.objects.all()
         teachers = Teachers.objects.all()
         courses = Course.objects.all()
+        blogs = Blog_list.objects.all()
 
-        context = {'categories': categories,
-                   'teachers': teachers,
-                   'courses': courses,
-                   'active_page': 'home'}
+        context = {
+            'categories': categories,
+            'teachers': teachers,
+            'courses': courses,
+            'blogs': blogs,
+        }
 
         return render(request, 'app/index.html', context)
 

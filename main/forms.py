@@ -54,7 +54,7 @@ class RegisterModelForm(forms.ModelForm):
         password = self.data.get('password')
         confirm_password = self.data.get('confirm_password')
         if password != confirm_password:
-            raise forms.ValidationError('Password didn\'t match')
+            raise forms.ValidationError('Password not match')
         return password
 
 

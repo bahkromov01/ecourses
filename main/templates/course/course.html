@@ -79,7 +79,7 @@
                                         <small class="m-0"><i
                                                 class="far fa-clock text-primary mr-2"></i>{{ course.hours }}h {{ course.minutes }}m</small>
                                     </div>
-                                    <a class="h5" href="">{{ course.title }}</a>
+                                    <a class="h5" href="{% url 'course_detail' course.id %}">{{ course.title }}</a>
                                     <div class="border-top mt-4 pt-4">
                                         <div class="d-flex justify-content-between">
                                             <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5

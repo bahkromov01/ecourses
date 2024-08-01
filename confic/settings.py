@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'courses',
     'teachers',
     'main',
-    'social_django'
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -150,16 +150,18 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'baxromovruslan322@gmail.com'
-EMAIL_HOST_PASSWORD = 'zcpj xuml rixh uebv'
+EMAIL_HOST_PASSWORD = 'jpzj hgwy crjn ejjq'
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
+
 AUTHENTICATION_BACKENDS = [
-   'django.contrib.auth.backends.ModelBackend',
+ 'django.contrib.auth.backends.ModelBackend',
+ 'social_core.backends.google.GoogleOAuth2',
 ]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '703741537059-o73egdnmkbu02mnb0ik7o6qbcf0im0ag.apps.googleusercontent.com' # Google Client ID
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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' # Google Client Secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '582049736628-c3r59a7if6sah2ek1gd7anbuira5psa6.apps.googleusercontent.com' # Google Client ID
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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' # Google Client Secret
 
 
-LOGIN_REDIRECT_URL = '/app/index.html'
+LOGIN_REDIRECT_URL = '/main/index.html'

@@ -1,43 +1,64 @@
+
+from courses.models import Category
 from django.db import models
+from datetime import date
+from django.urls import reverse
+from django.contrib.auth.models import User
 
-# Create your models here.
+
+class BlogAuthor(models.Model):
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    image = models.ImageField(upload_to='images/blog')
+    bio = models.TextField(max_length=400, help_text="Enter your bio details here.")
+
+    class Meta:
+        ordering = ["user", "bio"]
+
+    def get_absolute_url(self):
+        return reverse('blogs', args=[str(self.id)])
+
+    def __str__(self):
+        return self.user.username
 
 
-class Blog(models.Model):
+class Blog_list(models.Model):
     title = models.CharField(max_length=200)
-    body = models.TextField()
-    pub_date = models.DateTimeField('date published')
+    author = models.ForeignKey(BlogAuthor, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(max_length=2000, help_text="Enter you blog text here.")
+    post_date = models.DateField(default=date.today)
+
+    class Meta:
+        ordering = ["-post_date"]
+
+    def get_absolute_url(self):
+        return reverse('blog_detail', args=[str(self.id)])
 
     def __str__(self):
         return self.title
 
 
-class Author(models.Model):
-    full_name = models.CharField(max_length=200)
-    age = models.IntegerField()
-    education = models.CharField(max_length=200)
+class BlogImage(models.Model):
     image = models.ImageField(upload_to='images/')
-    author = models.ForeignKey(Blog, related_name='author', on_delete=models.CASCADE, null=True, blank=True)
+    blog_id = models.ForeignKey(Blog_list, on_delete=models.CASCADE)
+
+
+class BlogComment(models.Model):
+    description = models.TextField(max_length=1000, help_text="Enter comment about blog here.")
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    post_date = models.DateTimeField(auto_now_add=True)
+    blog = models.ForeignKey(Blog_list, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["post_date"]
 
     def __str__(self):
-        return self.full_name
+        len_title = 75
+        if len(self.description) > len_title:
+            titlestring = self.description[:len_title] + '...'
+        else:
+            titlestring = self.description
 
+        return titlestring
 
-class Comment(models.Model):
-    name = models.CharField(max_length=200)
-    body = models.TextField()
-    is_approved = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
-    reader_name = models.ForeignKey(Author, related_name='reader_name', on_delete=models.CASCADE, null=True, blank=True)
-    reader_email = models.ForeignKey(Author, related_name='reader_email', on_delete=models.CASCADE, null=True, blank=True)
-    blog = models.ForeignKey(Blog, related_name='comments', on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Image(models.Model):
-    image = models.ImageField(upload_to='images/')
-    blog = models.ForeignKey(Blog, related_name='images', on_delete=models.CASCADE, null=True, blank=True)
 
 
