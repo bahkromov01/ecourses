@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 
 from django.shortcuts import get_object_or_404
 from django.views import generic, View
+from django.views.generic import TemplateView
 
+from courses.forms import CommentForm
 from courses.models import Category
 from .models import Blog_list, BlogAuthor, BlogComment
 from django.contrib.auth.models import User  # Blog author or commenter
@@ -89,21 +91,35 @@ class BlogListView(View):
         return render(request, 'blog/blog.html', context)
 
 
-class BlogDetail(View):
-    def get(self, request, slug):
-        category = None
-        print(slug)
-        if slug == '/blog/single/None':
-           category = Category.objects.get(slug=slug)
+class BlogDetailView(TemplateView):
+    template_name = 'blog/blog_detail.html'
+
+    def get_context_data(self, **kwargs):
+        blogs = Blog_list.objects.all()
         categories = Category.objects.all()
-        num_of_categories = len(categories)
+        blog = Blog_list.objects.get(pk=self.kwargs['pk'])
+        comments = blog.comments.all()
+        authors = blog.auther_id.all()
+        context = super().get_context_data(**kwargs)
+        context['blog'] = blog
+        context['authors'] = authors
+        context['categories'] = categories
+        context['blogs'] = blogs
+        context['comments'] = comments
+        return context
 
-        context = {'category': category,
-                   'categories': categories,
-                   'num_of_categories': num_of_categories,
-                   'active_page': 'blog'}
-
-        return render(request, 'blog/blog_detail.html', context)
+    def post(self, request, *args, **kwargs):
+        blog = get_object_or_404(Blog_list, pk=self.kwargs['pk'])
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.is_published = True
+            comment.blog_id = blog
+            comment.save()
+            return redirect(reverse('blog-detail', kwargs={'pk': blog.pk}))
+        context = self.get_context_data(**kwargs)
+        context['form'] = form
+        return self.render_to_response(context)
 
 
 class BlogCommentCreate(LoginRequiredMixin, CreateView):

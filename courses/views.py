@@ -1,8 +1,6 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
 from django.views import View
-from django.views.generic import TemplateView
 
 from blog.models import Blog_list
 from teachers.models import Teachers
@@ -59,34 +57,18 @@ class CourseList(View):
         return render(request, 'course/course.html', context)
 
 
-class CourseDetailView(TemplateView):
-    template_name = 'blog/blog_detail.html'
-
-    def get_context_data(self, **kwargs):
-        blogs = Blog_list.objects.all()
+class CourseDetail(View):
+    def get(self, request, slug):
+        courses = Course.objects.get(slug=slug)
+        comments = Comment.objects.filter(course_id__slug=slug)
         categories = Category.objects.all()
-        blog = Blog_list.objects.get(pk=self.kwargs['pk'])
-        comments = blog.comments.all()
-        authors = blog.auther_id.all()
-        context = super().get_context_data(**kwargs)
-        context['blog'] = blog
-        context['authors'] = authors
-        context['categories'] = categories
-        context['blogs'] = blogs
-        context['comments'] = comments
-        return context
+        blogs = Blog_list.objects.all()
 
-    def post(self, request, *args, **kwargs):
-        blog = get_object_or_404(Blog_list, pk=self.kwargs['pk'])
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.is_published = True
-            comment.blog_id = blog
-            comment.save()
-            return redirect(reverse('blog-detail', kwargs={'pk': blog.pk}))
-        context = self.get_context_data(**kwargs)
-        context['form'] = form
-        return self.render_to_response(context)
+        context = {'courses': courses,
+                   'comments': comments,
+                   'categories': categories,
+                   'blogs': blogs, }
+
+        return render(request, 'course/course_detail.html', context)
 
 
