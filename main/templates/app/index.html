@@ -130,7 +130,7 @@
                                         <small class="m-0"><i
                                                 class="far fa-clock text-primary mr-2"></i>{{ course.hours }}h {{ course.minutes }}m</small>
                                     </div>
-                                    <a class="h5" href="">{{ course.title }}</a>
+                                    <a class="h5" href="{% url 'course_detail' course.id %}">{{ course.title }}</a>
                                     <div class="border-top mt-4 pt-4">
                                         <div class="d-flex justify-content-between">
                                             <h6 class="m-0"><i class="fa fa-star text-primary mr-2"></i>4.5
@@ -169,7 +169,7 @@
                             </div>
                         </div>
                         <div class="bg-secondary p-4">
-                            <h5>{{ teacher.full_name }}</h5>
+                            <h5><a href="{% url 'teacher_detail' teacher.id %}">{{ teacher.full_name }}</a></h5>
                             <p class="m-0">{{ teacher.specialty }}</p>
                         </div>
                     </div>
@@ -190,33 +190,17 @@
                 <h1>Latest From Our Blog</h1>
             </div>
             <div class="row pb-3">
+                {% for blog in blogs %}
                 <div class="col-lg-4 mb-4">
                     <div class="blog-item position-relative overflow-hidden rounded mb-2">
                         <img class="img-fluid" src="{% static 'img/blog-1.jpg' %}" alt="">
-                        <a class="blog-overlay text-decoration-none" href="">
-                            <h5 class="text-white mb-3">Lorem elitr magna stet eirmod labore amet labore clita at ut clita</h5>
-                            <p class="text-primary m-0">Jan 01, 2050</p>
+                        <a class="blog-overlay text-decoration-none" href="{% url 'blog_detail' blog.id %}">
+                            <h5 class="text-white mb-3">{{ blog.title }}</h5>
+                            <p class="text-primary m-0">{{ blog.post_date }}</p>
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="blog-item position-relative overflow-hidden rounded mb-2">
-                        <img class="img-fluid" src="{% static 'img/blog-2.jpg' %}" alt="">
-                        <a class="blog-overlay text-decoration-none" href="">
-                            <h5 class="text-white mb-3">Lorem elitr magna stet eirmod labore amet labore clita at ut clita</h5>
-                            <p class="text-primary m-0">Jan 01, 2050</p>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4">
-                    <div class="blog-item position-relative overflow-hidden rounded mb-2">
-                        <img class="img-fluid" src="{% static 'img/blog-3.jpg' %}" alt="">
-                        <a class="blog-overlay text-decoration-none" href="">
-                            <h5 class="text-white mb-3">Lorem elitr magna stet eirmod labore amet labore clita at ut clita</h5>
-                            <p class="text-primary m-0">Jan 01, 2050</p>
-                        </a>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
