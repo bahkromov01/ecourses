@@ -63,8 +63,6 @@
         <!-- Comment Form -->
         <div class="bg-secondary rounded p-5">
                         <h3 class="text-uppercase mb-4" style="letter-spacing: 5px;">Leave a comment</h3>
-                        <form method="post" action="{% url 'add_comment' comments.slug %}">
-                        {% csrf_token %}
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" name="name" class="form-control border-0" id="name">

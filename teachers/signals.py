@@ -13,15 +13,10 @@ from teachers.models import Teachers
 @receiver(post_save, sender=Teachers)
 def teachers_save(sender, instance, created,  **kwargs):
     if created:
-        subject = f'HI{instance.name}'
-        message = 'Your teachers has been created. Thank you!'
-        from_email = (settings.EMAIL_HOST_USER)
-        to_email =[instance.email]
-        try:
-            send_mail(subject, message, from_email, to_email)
-            print(f'Mail sent to {instance.email}')
-        except Exception as e:
-            raise f'Error sending email: {e}'
+        print(f'{instance.full_name} is created! ')
+        print(kwargs)
+    else:
+        print('Course updated')
 
 
 def teachers_delete(sender, instance, **kwargs):
